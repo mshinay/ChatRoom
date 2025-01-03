@@ -4,10 +4,12 @@ import com.message.Message;
 import com.message.MessageType;
 import com.utility.Utility;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 
 public class Client {
@@ -46,6 +48,32 @@ public class Client {
             throw new Exception(e);
         }
         return flag;
+    }
+
+    public void grupeChat() {
+        String content=Utility.GetString(100);//sent chat content in ChatRoom
+        Message<String> message=new Message<>(null,user.getId(),content, LocalDateTime.now());
+        message.setMessageType(MessageType.MESSAGE_SEND_GRUPE);
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
+            oos.writeObject(message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void chatPrivate(String receiverId) {//sent chat content to other account
+        String content=Utility.GetString(100);
+        Message<String> message=new Message<>(receiverId,user.getId(),content, LocalDateTime.now());
+        message.setMessageType(MessageType.MESSAGE_SEND_PRIVATE);
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
+            oos.writeObject(message);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

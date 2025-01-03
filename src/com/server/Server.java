@@ -35,7 +35,8 @@ public class Server {
             }else {
                 message.setMessageType(MessageType.MESSAGE_LOGIN_SUCESS);//LOGIN_SUCESS
                 oos.writeObject(message);
-                new Thread(new ThreatOfServerToClient(socket)).start();
+                ServerSocketManage.addSocket(user.getId(), socket);//add into Server's socket set
+                new Thread(new ThreatOfServerToClient(socket,user)).start();
             }
 
 

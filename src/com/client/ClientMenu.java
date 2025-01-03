@@ -3,6 +3,7 @@ package com.client;
 import com.utility.Utility;
 
 public class ClientMenu {
+    Client client=new Client();
     public static void main(String[] args) throws Exception {
         new ClientMenu().showMenu();
     }
@@ -15,7 +16,7 @@ public class ClientMenu {
             String key= Utility.GetString(1);
             switch (key){
                 case "1":
-                    Client client=new Client();
+
                     if(client.login()){
                     showSecondMenu();
                     }else{
@@ -42,6 +43,7 @@ public class ClientMenu {
                 case "1":
                     break;
                 case "2":
+                    client.grupeChat();
                     break;
                 case "3":
                     loop = false;

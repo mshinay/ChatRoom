@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 
 public class Message<MesType> implements Serializable {
-    private User Sender;
-    private User Receiver;
+    private String SenderID;
+    private String ReceiverID;
     private LocalDateTime Sendtime;
     private MesType content; //use generics to expand type of message like text,picture,video,ect
     private String MessageType;
@@ -25,27 +25,27 @@ public class Message<MesType> implements Serializable {
 
     }
 
-    public Message(User receiver, User sender, MesType content, LocalDateTime sendtime) {
-        Receiver = receiver;
-        Sender = sender;
+    public Message(String receiverID, String senderID, MesType content, LocalDateTime sendtime) {
+        ReceiverID = receiverID;
+        SenderID = senderID;
         this.content = content;
         Sendtime = sendtime;
     }
 
-    public User getReceiver() {
-        return Receiver;
+    public String getReceiverID() {
+        return ReceiverID;
     }
 
-    public void setReceiver(User receiver) {
-        Receiver = receiver;
+    public void setReceiverID(String receiverID) {
+        ReceiverID = receiverID;
     }
 
-    public User getSender() {
-        return Sender;
+    public String getSenderID() {
+        return SenderID;
     }
 
-    public void setSender(User sender) {
-        Sender = sender;
+    public void setSenderID(String senderID) {
+        SenderID = senderID;
     }
 
     public MesType getContent() {
