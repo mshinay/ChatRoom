@@ -3,20 +3,18 @@ package com.server;
 import com.client.User;
 import com.message.Message;
 import com.message.MessageType;
-
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+
 
 
 
 public class Server {
     public static void main(String[] args) throws Exception {
 
-        ServerSocket serverSocket = new ServerSocket(8888);//lisent to port 8888
+        ServerSocket serverSocket = new ServerSocket(9999);//lisent to port 9999
         while (true) {
             Socket socket = serverSocket.accept();
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Client
@@ -37,6 +35,7 @@ public class Server {
                 oos.writeObject(message);
                 ServerSocketManage.addSocket(user.getId(), socket);//add into Server's socket set
                 new Thread(new ThreatOfServerToClient(socket,user)).start();
+                System.out.println(user.getId()+"进入服务器");
             }
 
 

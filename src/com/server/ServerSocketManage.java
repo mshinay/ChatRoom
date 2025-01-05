@@ -1,5 +1,6 @@
 package com.server;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 
@@ -17,6 +18,11 @@ public class ServerSocketManage {
 
     public static Socket getSocket(String id) {
         return connections.get(id);
+    }
+
+    public static void removeSocket(String id) throws IOException {
+
+        connections.remove(id).close();
     }
 
 }

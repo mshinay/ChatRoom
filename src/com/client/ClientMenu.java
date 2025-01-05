@@ -6,6 +6,7 @@ public class ClientMenu {
     Client client=new Client();
     public static void main(String[] args) throws Exception {
         new ClientMenu().showMenu();
+
     }
     boolean loop = true;
     public void showMenu() throws Exception {
@@ -24,13 +25,14 @@ public class ClientMenu {
                     }
                     break;
                 case "9":
-
+                    loop = false;
                     break;
                 default:
 
                     break;
             }
         }
+
     }
 
     void showSecondMenu() {
@@ -41,12 +43,16 @@ public class ClientMenu {
             String key = Utility.GetString(1);
             switch (key) {
                 case "1":
+                    System.out.print("私聊对象：");
+                    String receiverID = Utility.GetString(10);
+                    client.chatPrivate(receiverID);
                     break;
                 case "2":
                     client.grupeChat();
                     break;
                 case "3":
                     loop = false;
+                    client.closeSocket();
                     break;
                 default:
                     break;

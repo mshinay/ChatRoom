@@ -13,9 +13,16 @@ import java.time.LocalDateTime;
 
 
 public class Client {
-     Socket socket;
-     User user;
+     private Socket socket;
+     private User user;
+     private ThreatOfClientToServer threatOfClientToServer;
+     private ObjectOutputStream oos;
+     private ObjectInputStream ois;
 
+
+    public ThreatOfClientToServer getThreatOfClientToServer() {
+        return threatOfClientToServer;
+    }
 
     boolean login() throws Exception {
         boolean flag = false;//use to return
@@ -26,9 +33,9 @@ public class Client {
         user=new User(id,password);
 
         try {
-            socket = new Socket(InetAddress.getLocalHost(), 8888);
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());//receive Message from Server
+            socket = new Socket(InetAddress.getLocalHost(), 9999);
+            oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
+            ois = new ObjectInputStream(socket.getInputStream());//receive Message from Server
             //send info of user to server to check
             oos.writeObject(user);
             oos.flush();
@@ -37,8 +44,9 @@ public class Client {
             Message mes=(Message) ois.readObject();
             if(mes.getMessageType().equals(MessageType.MESSAGE_LOGIN_SUCESS)){//login sucessfully
                 ClientSocketManage.addSocket(user.getId(), socket);//put connected used into socket set
-                ThreatOfClientToServer threatOfClientToServer = new ThreatOfClientToServer(socket);
-                new Thread(threatOfClientToServer).start();
+                threatOfClientToServer = new ThreatOfClientToServer(socket);
+                Thread thread = new Thread(threatOfClientToServer);
+                thread.start();
                 flag = true;
             }else{//login failly
                 socket.close();
@@ -55,7 +63,7 @@ public class Client {
         Message<String> message=new Message<>(null,user.getId(),content, LocalDateTime.now());
         message.setMessageType(MessageType.MESSAGE_SEND_GRUPE);
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
+            oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
             oos.writeObject(message);
             oos.flush();
         } catch (IOException e) {
@@ -68,9 +76,22 @@ public class Client {
         Message<String> message=new Message<>(receiverId,user.getId(),content, LocalDateTime.now());
         message.setMessageType(MessageType.MESSAGE_SEND_PRIVATE);
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
+            oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
             oos.writeObject(message);
             oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeSocket() {//close socket
+        try {
+            oos=new ObjectOutputStream(socket.getOutputStream());
+            Message message=new Message();
+            message.setMessageType(MessageType.MESSAGE_LOGOUT);
+            oos.writeObject(message);
+            oos.flush();
+            System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
