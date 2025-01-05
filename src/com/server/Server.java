@@ -16,6 +16,7 @@ public class Server {
 
         ServerSocket serverSocket = new ServerSocket(9999);//lisent to port 9999
         while (true) {
+            ServerSocketManager.viewAllSocket();
             Socket socket = serverSocket.accept();
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Client
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());//receive Message from Client
@@ -33,7 +34,7 @@ public class Server {
             }else {
                 message.setMessageType(MessageType.MESSAGE_LOGIN_SUCESS);//LOGIN_SUCESS
                 oos.writeObject(message);
-                ServerSocketManage.addSocket(user.getId(), socket);//add into Server's socket set
+                ServerSocketManager.addSocket(user.getId(), socket);//add into Server's socket set
                 new Thread(new ThreatOfServerToClient(socket,user)).start();
                 System.out.println(user.getId()+"进入服务器");
             }

@@ -6,6 +6,7 @@ import com.message.Message;
 import com.message.MessageType;
 import com.utility.Utility;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import java.io.ObjectOutputStream;
@@ -31,33 +32,49 @@ public class ThreatOfServerToClient implements Runnable{
 
             try {
 
-                ois = new ObjectInputStream(socket.getInputStream());
-                Message message=(Message) ois.readObject();
+
+                    ois = new ObjectInputStream(socket.getInputStream());
+                    Message message=(Message) ois.readObject();
+                    String content="";
                 switch (message.getMessageType()){//deal with different types of message
                     case MessageType.MESSAGE_SEND_GRUPE:
-                        String content=(String) message.getContent();
+                        content=(String) message.getContent();
                         System.out.println(user.getId()+":"+content+"\t"+ Utility.TimeFormat(message.getSendtime()));
                         break;
                     case MessageType.MESSAGE_SEND_PRIVATE:
-                        Socket Receiversocket = ServerSocketManage.getSocket(message.getReceiverID());
+                        Socket Receiversocket = ServerSocketManager.getSocket(message.getReceiverID());
                         ObjectOutputStream Receiveroos = new ObjectOutputStream(Receiversocket.getOutputStream());
                         Receiveroos.writeObject(message);
                         Receiveroos.flush();
                         break;
                     case MessageType.MESSAGE_LOGOUT:
                         loop = false;
-                        ServerSocketManage.removeSocket(user.getId());
+                        ServerSocketManager.removeSocket(user.getId());
                         System.out.println(user.getId()+"下线");
-
                         break;
-
+                    case MessageType.MESSAGE_VIEW_ONLINEUSER:
+                        message.setContent(ServerSocketManager.viewAllSocket());
+                        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                        System.out.println(ServerSocketManager.viewAllSocket());
+                        oos.writeObject(message);
+                        oos.flush();
+                        break;
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                try {
+                    ServerSocketManager.removeSocket(user.getId());
+                } catch (IOException ex) {
+
+                }
+                System.out.println(user.getId()+"下线");
+                    break;
+                }
+
             }
 
 
         }
     }
-}
+
+

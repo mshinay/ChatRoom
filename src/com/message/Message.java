@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-public class Message<MesType> implements Serializable {
+public class Message implements Serializable {
     private String SenderID;
     private String ReceiverID;
     private LocalDateTime Sendtime;
-    private MesType content; //use generics to expand type of message like text,picture,video,ect
+    private String content; //use generics to expand type of message like text,picture,video,ect
     private String MessageType;
 
     public Message() {
@@ -25,7 +25,7 @@ public class Message<MesType> implements Serializable {
 
     }
 
-    public Message(String receiverID, String senderID, MesType content, LocalDateTime sendtime) {
+    public Message(String receiverID, String senderID, String content, LocalDateTime sendtime) {
         ReceiverID = receiverID;
         SenderID = senderID;
         this.content = content;
@@ -48,11 +48,11 @@ public class Message<MesType> implements Serializable {
         SenderID = senderID;
     }
 
-    public MesType getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(MesType content) {
+    public void setContent(String content) {
         this.content = content;
     }
 

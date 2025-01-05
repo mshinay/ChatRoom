@@ -40,6 +40,7 @@ public class ClientMenu {
             System.out.println("1:私聊");
             System.out.println("2:群发");
             System.out.println("3:退出");
+            System.out.println("4:在线用户");
             String key = Utility.GetString(1);
             switch (key) {
                 case "1":
@@ -52,7 +53,10 @@ public class ClientMenu {
                     break;
                 case "3":
                     loop = false;
-                    client.closeSocket();
+                    client.Logout();
+                    break;
+                case "4":
+                    client.viewOnlineAccounts();
                     break;
                 default:
                     break;

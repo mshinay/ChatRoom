@@ -6,5 +6,6 @@ public interface MessageType {
     String MESSAGE_LOGOUT = "3";
     String MESSAGE_SEND_GRUPE = "4";
     String MESSAGE_SEND_PRIVATE = "5";
+    String MESSAGE_VIEW_ONLINEUSER = "6";
 
 }

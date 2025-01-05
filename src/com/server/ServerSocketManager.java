@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class ServerSocketManage {
+public class ServerSocketManager {
     static HashMap<String,Socket> connections = new HashMap<>();
 
     /**
@@ -23,6 +23,15 @@ public class ServerSocketManage {
     public static void removeSocket(String id) throws IOException {
 
         connections.remove(id).close();
+    }
+
+    public static String viewAllSocket()  {
+        StringBuffer buffer = new StringBuffer();
+        for(String id : connections.keySet()) {
+
+                buffer.append(id + " ");
+        }
+        return new String(buffer);
     }
 
 }

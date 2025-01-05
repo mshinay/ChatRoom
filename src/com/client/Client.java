@@ -3,7 +3,6 @@ package com.client;
 import com.message.Message;
 import com.message.MessageType;
 import com.utility.Utility;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -60,8 +59,9 @@ public class Client {
 
     public void grupeChat() {
         String content=Utility.GetString(100);//sent chat content in ChatRoom
-        Message<String> message=new Message<>(null,user.getId(),content, LocalDateTime.now());
+        Message message=new Message(null,user.getId(),content, LocalDateTime.now());
         message.setMessageType(MessageType.MESSAGE_SEND_GRUPE);
+
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
             oos.writeObject(message);
@@ -69,11 +69,13 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public void chatPrivate(String receiverId) {//sent chat content to other account
         String content=Utility.GetString(100);
-        Message<String> message=new Message<>(receiverId,user.getId(),content, LocalDateTime.now());
+        Message message=new Message(receiverId,user.getId(),content, LocalDateTime.now());
         message.setMessageType(MessageType.MESSAGE_SEND_PRIVATE);
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());//send Message to Server
@@ -84,7 +86,7 @@ public class Client {
         }
     }
 
-    public void closeSocket() {//close socket
+    public void Logout() {//close socket
         try {
             oos=new ObjectOutputStream(socket.getOutputStream());
             Message message=new Message();
@@ -92,6 +94,21 @@ public class Client {
             oos.writeObject(message);
             oos.flush();
             System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * I'm so stupid that I thought I could call SeServerSocketManage methods without apply for Server in Client
+     */
+    public void viewOnlineAccounts() {
+        try {
+            oos=new ObjectOutputStream(socket.getOutputStream());
+            Message message=new Message(null,user.getId(),"",LocalDateTime.now());
+            message.setMessageType(MessageType.MESSAGE_VIEW_ONLINEUSER);
+            oos.writeObject(message);
+            oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
