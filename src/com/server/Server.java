@@ -3,6 +3,8 @@ package com.server;
 import com.client.User;
 import com.message.Message;
 import com.message.MessageType;
+import com.utility.Utility;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -22,16 +24,17 @@ public class Server {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());//receive Message from Client
             User user=(User) ois.readObject();
             Message message = new Message();
-            if(user.getId()==null){//id is invaild
+            if(!Utility.CheckUser(user.getId(),user.getPassword())) {
                 message.setMessageType(MessageType.MESSAGE_LOGIN_FAIL);
                 oos.writeObject(message);
                 socket.close();
             }
-            if(!(user.getPassword().equals("123456"))){//password is wrong
-                message.setMessageType(MessageType.MESSAGE_LOGIN_FAIL);
+            if(ServerSocketManager.getSocket(user.getId())!=null) {//avoid Repeated logins
+                message.setMessageType(MessageType.MESSAGE_REPEATED_LOGIN);
                 oos.writeObject(message);
                 socket.close();
-            }else {
+            }
+            else {
                 message.setMessageType(MessageType.MESSAGE_LOGIN_SUCESS);//LOGIN_SUCESS
                 oos.writeObject(message);
                 ServerSocketManager.addSocket(user.getId(), socket);//add into Server's socket set

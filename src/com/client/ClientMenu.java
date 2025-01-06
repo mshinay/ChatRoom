@@ -18,10 +18,8 @@ public class ClientMenu {
             switch (key){
                 case "1":
 
-                    if(client.login()){
-                    showSecondMenu();
-                    }else{
-                        System.out.println("登录失败");
+                    if(client.login()) {
+                      showSecondMenu();
                     }
                     break;
                 case "9":
@@ -39,8 +37,8 @@ public class ClientMenu {
         while(loop) {
             System.out.println("1:私聊");
             System.out.println("2:群发");
-            System.out.println("3:退出");
-            System.out.println("4:在线用户");
+            System.out.println("3:查询在线用户");
+            System.out.println("4:退出");
             String key = Utility.GetString(1);
             switch (key) {
                 case "1":
@@ -52,11 +50,11 @@ public class ClientMenu {
                     client.grupeChat();
                     break;
                 case "3":
-                    loop = false;
-                    client.Logout();
+                    client.viewOnlineAccounts();
                     break;
                 case "4":
-                    client.viewOnlineAccounts();
+                    loop = false;
+                    client.Logout();
                     break;
                 default:
                     break;

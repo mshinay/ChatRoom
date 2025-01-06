@@ -48,6 +48,13 @@ public class Client {
                 thread.start();
                 flag = true;
             }else{//login failly
+                switch (mes.getMessageType()) {
+                    case MessageType.MESSAGE_LOGIN_FAIL:
+                        System.out.println("登陆失败");
+                        break;
+                    case MessageType.MESSAGE_REPEATED_LOGIN:
+                        System.out.println("该用户已在线");
+                }
                 socket.close();
 
             }
