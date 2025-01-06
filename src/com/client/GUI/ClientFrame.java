@@ -47,6 +47,8 @@ public class ClientFrame extends JFrame {
 
     public void init() {
         txtAllMessages = new JTextArea(30,20);
+        txtAllMessages.setEditable(false);
+
         txtSendMessages = new JTextField(20);
         txtReceiverID = new JTextField(20);
         lbReceiverID = new JLabel("对方ID:");
@@ -64,6 +66,7 @@ public class ClientFrame extends JFrame {
         panelReceiverID = new JPanel(new FlowLayout());
         panelReceiverID.add(lbReceiverID);
         panelReceiverID.add(txtReceiverID);
+        panelReceiverID.setVisible(false);
 
         PanelMenu = new JPanel(new FlowLayout());
         PanelMenu.add(btnGrupe);
@@ -74,8 +77,9 @@ public class ClientFrame extends JFrame {
 
         box=Box.createVerticalBox();
         box.add(scrollPaneAllMessages);
+        box.add(panelReceiverID);
         box.add(panelSendMessages);
-        if(displayPrivate){box.add(panelReceiverID);}
+
         box.add(PanelMenu);
 
         this.setContentPane(box);
@@ -89,58 +93,72 @@ public class ClientFrame extends JFrame {
     }
 
     class BtnSendListener implements ActionListener {
-        private Frame frame;
+        private ClientFrame frame;
         private Client client;
 
-        public BtnSendListener(Frame frame, Client client) {
+        public BtnSendListener(ClientFrame frame, Client client) {
             this.frame = frame;
             this.client = client;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+
             String content = txtSendMessages.getText();
             if("".equals(content)){
                 JOptionPane.showMessageDialog(frame,"输入内容不能为空","错误警告",JOptionPane.ERROR_MESSAGE);
             }else {
                 Message message=new Message(null,client.getUser().getId(),content, LocalDateTime.now());
-                if(displayPrivate) message.setMessageType(MessageType.MESSAGE_SEND_PRIVATE);
-                else message.setMessageType(MessageType.MESSAGE_SEND_GRUPE);
+                if(displayPrivate) {
+                    message.setMessageType(MessageType.MESSAGE_SEND_PRIVATE);
+                    message.setReceiverID(frame.txtReceiverID.getText());
+                    txtAllMessages.append("你对"+frame.txtReceiverID.getText()+":"+content+"\n");
+                }
+                else {
+                    message.setMessageType(MessageType.MESSAGE_SEND_GRUPE);
+                }
                 try {
                     ObjectOutputStream oos = new ObjectOutputStream(client.getSocket().getOutputStream());//send Message to Server
                     oos.writeObject(message);
                     oos.flush();
                 } catch (IOException ec) {
                     ec.printStackTrace();
+                }finally {
+                    frame.txtSendMessages.setText("");
+                    frame.txtReceiverID.setText("");
                 }
             }
         }
     }
 
     class BtnGrupeListener implements ActionListener {
-        private Frame frame;
+        private ClientFrame frame;
 
-        public BtnGrupeListener(Frame frame) {
+        public BtnGrupeListener(ClientFrame frame) {
             this.frame = frame;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             displayPrivate=false;
+            frame.panelReceiverID.setVisible(false);
+            frame.revalidate();
             frame.repaint();
         }
     }
 
     class BtnPrivateListener implements ActionListener {
-        private Frame frame;
+        private ClientFrame frame;
 
-        public BtnPrivateListener(Frame frame) {
+        public BtnPrivateListener(ClientFrame frame) {
             this.frame = frame;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             displayPrivate=true;
+            frame.panelReceiverID.setVisible(true);
+            frame.revalidate();
             frame.repaint();
         }
     }

@@ -16,7 +16,11 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) throws Exception {
 
-        ServerSocket serverSocket = new ServerSocket(9999);//lisent to port 9999
+       Server.StartServer(9999);
+    }
+
+    public static void StartServer(int port) throws Exception {
+        ServerSocket serverSocket = new ServerSocket(port);//lisent to port 9999
         while (true) {
             ServerSocketManager.viewAllSocket();
             Socket socket = serverSocket.accept();
@@ -41,8 +45,6 @@ public class Server {
                 new Thread(new ThreatOfServerToClient(socket,user)).start();
                 System.out.println(user.getId()+"进入服务器");
             }
-
-
 
         }
     }
