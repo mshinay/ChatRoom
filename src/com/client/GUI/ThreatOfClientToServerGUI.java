@@ -1,21 +1,30 @@
-package com.client;
+package com.client.GUI;
 
+import com.client.Client;
 import com.message.Message;
 import com.message.MessageType;
 import com.utility.Utility;
 
-
+import javax.swing.*;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
-public class ThreatOfClientToServer implements Runnable{
-    Socket socket;
+public class ThreatOfClientToServerGUI implements Runnable{
+    private Socket socket;
+    private JTextArea txtAllMessages;
+    private JFrame frame;
 
-    public ThreatOfClientToServer(Socket socket) {
+    public ThreatOfClientToServerGUI(Socket socket) {
         this.socket = socket;
     }
 
+    public void setTxtAllMessages(JTextArea txtAllMessages) {
+        this.txtAllMessages = txtAllMessages;
+    }
 
+    public void setFrame(JFrame frame) {
+        this.frame = frame;
+    }
 
     @Override
     public void run() {
@@ -27,26 +36,27 @@ public class ThreatOfClientToServer implements Runnable{
                 Message message=(Message) ois.readObject();//waiting message from server
                 switch (message.getMessageType()){
                     case MessageType.MESSAGE_SEND_PRIVATE:
-                        System.out.println("(私)"+message.getSenderID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime()));
+                        txtAllMessages.append("(私)"+message.getSenderID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime())+"\n");
                         break;
                     case MessageType.MESSAGE_SEND_GRUPE:
-                        if(message.getReceiverID().equals(message.getSenderID()))
-                            System.out.println("(公)你"+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime()));
-                        else System.out.println("(公)"+message.getSenderID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime()));
+                        if(message.getSenderID().equals(message.getReceiverID())){
+                            txtAllMessages.append("(公)你"+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime())+"\n");}
+                       else { txtAllMessages.append("(公)"+message.getSenderID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime())+"\n");}
                         break;
                     case MessageType.MESSAGE_VIEW_ONLINEUSER:
 
                         String[] users = message.getContent().split(" ");
                         for (String user : users) {
-                            System.out.println("用户:"+user);
+                            txtAllMessages.append("用户:"+user+"\n");
                         }
                         break;
                     case MessageType.MESSAGE_SEND_PRIVATE_FAIL:
-                        System.out.println(message.getContent());
+                        txtAllMessages.append(message.getContent()+"\n");
+                        break;
 
                 }
             } catch (Exception e) {
-                System.out.println("与服务器断开连接，请重新启动");
+                JOptionPane.showMessageDialog(frame,"连接异常","错误警告",JOptionPane.ERROR_MESSAGE);
                 break;
                 /**
                  * When closing Client,there'll throw out EOFException,I don't know how to solve it.

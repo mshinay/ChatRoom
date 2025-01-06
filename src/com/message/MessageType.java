@@ -8,5 +8,6 @@ public interface MessageType {
     String MESSAGE_SEND_PRIVATE = "5";
     String MESSAGE_VIEW_ONLINEUSER = "6";
     String MESSAGE_REPEATED_LOGIN = "7";
+    String MESSAGE_SEND_PRIVATE_FAIL = "8";
 
 }

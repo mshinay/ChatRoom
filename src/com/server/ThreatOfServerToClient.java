@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Map;
 
 public class ThreatOfServerToClient implements Runnable{
     Socket socket;
@@ -31,8 +32,6 @@ public class ThreatOfServerToClient implements Runnable{
 
 
             try {
-
-
                     ois = new ObjectInputStream(socket.getInputStream());
                     Message message=(Message) ois.readObject();
                     String content="";
@@ -40,12 +39,28 @@ public class ThreatOfServerToClient implements Runnable{
                     case MessageType.MESSAGE_SEND_GRUPE:
                         content=(String) message.getContent();
                         System.out.println(user.getId()+":"+content+"\t"+ Utility.TimeFormat(message.getSendtime()));
+                        Map.Entry[] entries =ServerSocketManager.getAllIfo();
+                        for (Map.Entry entry : entries) {
+                            ObjectOutputStream Receiveroos = new ObjectOutputStream(((Socket)entry.getValue()).getOutputStream());
+                            message.setReceiverID((String) entry.getKey());
+                            Receiveroos.writeObject(message);
+                            Receiveroos.flush();
+                        }
                         break;
                     case MessageType.MESSAGE_SEND_PRIVATE:
-                        Socket Receiversocket = ServerSocketManager.getSocket(message.getReceiverID());
-                        ObjectOutputStream Receiveroos = new ObjectOutputStream(Receiversocket.getOutputStream());
-                        Receiveroos.writeObject(message);
-                        Receiveroos.flush();
+                        if(ServerSocketManager.getSocket(message.getReceiverID())==null){
+                            message.setContent("当前用户不在线");
+                            message.setMessageType(MessageType.MESSAGE_SEND_PRIVATE_FAIL);
+                            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                            oos.writeObject(message);
+                            oos.flush();
+                        }
+                        else {
+                            Socket Receiversocket = ServerSocketManager.getSocket(message.getReceiverID());
+                            ObjectOutputStream Receiveroos = new ObjectOutputStream(Receiversocket.getOutputStream());
+                            Receiveroos.writeObject(message);
+                            Receiveroos.flush();
+                        }
                         break;
                     case MessageType.MESSAGE_LOGOUT:
                         loop = false;

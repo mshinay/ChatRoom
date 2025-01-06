@@ -18,7 +18,7 @@ public class ClientMenu {
             switch (key){
                 case "1":
 
-                    if(client.login()) {
+                    if(client.loginGUI()) {
                       showSecondMenu();
                     }
                     break;

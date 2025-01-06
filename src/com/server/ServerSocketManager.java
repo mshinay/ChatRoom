@@ -3,6 +3,7 @@ package com.server;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ServerSocketManager {
     static HashMap<String,Socket> connections = new HashMap<>();
@@ -32,6 +33,10 @@ public class ServerSocketManager {
                 buffer.append(id + " ");
         }
         return new String(buffer);
+    }
+
+    public static Map.Entry[] getAllIfo() {
+        return connections.entrySet().toArray(new Map.Entry[connections.size()]);
     }
 
 }
