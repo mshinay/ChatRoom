@@ -1,4 +1,4 @@
-package com.client.GUI;
+package com.GUI;
 
 
 

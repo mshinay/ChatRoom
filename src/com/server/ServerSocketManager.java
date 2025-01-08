@@ -12,10 +12,9 @@ public class ServerSocketManager {
      *
      * @param id userID
      * @param socket
+     * when a user login, add socket of server into the hashmap
      */
-    public static void addSocket(String id,Socket socket ) {
-        connections.put(id,socket);
-    }
+    public static void addSocket(String id,Socket socket ) {connections.put(id,socket);}
 
     public static Socket getSocket(String id) {
         return connections.get(id);

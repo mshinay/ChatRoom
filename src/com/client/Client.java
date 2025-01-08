@@ -1,6 +1,6 @@
 package com.client;
 
-import com.client.GUI.ThreatOfClientToServerGUI;
+import com.GUI.ThreatOfClientToServerGUI;
 import com.message.Message;
 import com.message.MessageType;
 import com.utility.Utility;
@@ -37,7 +37,7 @@ public class Client {
         return socket;
     }
 
-    boolean loginGUI() throws Exception {
+    boolean login() throws Exception {//used in terminal
         boolean flag = false;//use to return
         System.out.print("输入ID:");
         String id=Utility.GetString(10);
@@ -55,13 +55,13 @@ public class Client {
 
             //receive check message from server
             Message mes=(Message) ois.readObject();
-            if(mes.getMessageType().equals(MessageType.MESSAGE_LOGIN_SUCESS)){//loginGUI sucessfully
+            if(mes.getMessageType().equals(MessageType.MESSAGE_LOGIN_SUCESS)){//login sucessfully
                 ClientSocketManage.addSocket(user.getId(), socket);//put connected used into socket set
                 threatOfClientToServer = new ThreatOfClientToServer(socket);
                 Thread thread = new Thread(threatOfClientToServer);
                 thread.start();
                 flag = true;
-            }else{//loginGUI failly
+            }else{//login failly
                 switch (mes.getMessageType()) {
                     case MessageType.MESSAGE_LOGIN_FAIL:
                         System.out.println("登陆失败");
@@ -92,13 +92,13 @@ public class Client {
 
             //receive check message from server
             Message mes=(Message) ois.readObject();
-            if(mes.getMessageType().equals(MessageType.MESSAGE_LOGIN_SUCESS)){//loginGUI sucessfully
+            if(mes.getMessageType().equals(MessageType.MESSAGE_LOGIN_SUCESS)){//login sucessfully
                 ClientSocketManage.addSocket(user.getId(), socket);//put connected used into socket set
                 threatOfClientToServerGUI = new ThreatOfClientToServerGUI(socket);
                 Thread thread = new Thread(threatOfClientToServerGUI);
                 thread.start();
                 flag = true;
-            }else{//loginGUI failly
+            }else{//login failly
                 switch (mes.getMessageType()) {
                     case MessageType.MESSAGE_LOGIN_FAIL:
                         System.out.println("登陆失败");
@@ -144,14 +144,14 @@ public class Client {
         }
     }
 
-    public void Logout() {//close socket
+    public void Logout() {//end client main Process,and socket of client close automatically
         try {
             oos=new ObjectOutputStream(socket.getOutputStream());
             Message message=new Message();
             message.setMessageType(MessageType.MESSAGE_LOGOUT);
             oos.writeObject(message);
             oos.flush();
-            System.exit(0);
+            System.exit(0);//end client main Process
         } catch (IOException e) {
             e.printStackTrace();
         }

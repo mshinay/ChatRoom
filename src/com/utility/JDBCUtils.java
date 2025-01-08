@@ -13,7 +13,7 @@ public class JDBCUtils {
 
     static {
         try {
-            Properties properties = new Properties();
+            Properties properties = new Properties();//use mysql.properties to config info of jdbc
             properties.load(new FileInputStream("src\\mysql.properties"));
             username = properties.getProperty("username");
             password = properties.getProperty("password");

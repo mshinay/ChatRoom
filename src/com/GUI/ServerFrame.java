@@ -1,16 +1,12 @@
-package com.client.GUI;
+package com.GUI;
 
-import com.client.Client;
 import com.client.User;
 import com.message.Message;
 import com.message.MessageType;
-import com.server.Server;
 import com.server.ServerSocketManager;
-import com.server.ThreatOfServerToClient;
 import com.utility.Utility;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

@@ -1,4 +1,4 @@
-package com.client.GUI;
+package com.GUI;
 
 import com.client.Client;
 import com.message.Message;
@@ -40,7 +40,7 @@ public class ClientFrame extends JFrame {
         this.setLocationRelativeTo(null);
         init();
         ThreatOfClientToServerGUI threatOfClientToServerGUI = client.getThreatOfClientToServerGUI();
-        threatOfClientToServerGUI.setTxtAllMessages(txtAllMessages);
+        threatOfClientToServerGUI.setTxtAllMessages(txtAllMessages);//message content is printed in txtAllMessages,so the socket thread need to get it in GUI
         threatOfClientToServerGUI.setFrame(this);
         this.setVisible(true);
     }

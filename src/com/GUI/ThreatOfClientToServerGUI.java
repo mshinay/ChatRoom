@@ -1,6 +1,5 @@
-package com.client.GUI;
+package com.GUI;
 
-import com.client.Client;
 import com.message.Message;
 import com.message.MessageType;
 import com.utility.Utility;

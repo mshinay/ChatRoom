@@ -26,7 +26,7 @@ public class Utility {
         return myFormatObj.format(time);
     }
 
-    static public boolean CheckUser(String userId, String password) {
+    static public boolean CheckUser(String userId, String password) {  //check if user is valid
         if (userId == null || password == null) {//avoid null pointer
             return false;
         }

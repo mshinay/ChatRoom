@@ -38,7 +38,7 @@ public class ThreatOfServerToClient implements Runnable{
                 switch (message.getMessageType()){//deal with different types of message
                     case MessageType.MESSAGE_SEND_GRUPE:
                         content=(String) message.getContent();
-                        System.out.println(user.getId()+":"+content+"\t"+ Utility.TimeFormat(message.getSendtime()));
+                        System.out.println(user.getId()+"对所有人:"+content+"\t"+ Utility.TimeFormat(message.getSendtime()));
                         Map.Entry[] entries =ServerSocketManager.getAllIfo();
                         for (Map.Entry entry : entries) {
                             ObjectOutputStream Receiveroos = new ObjectOutputStream(((Socket)entry.getValue()).getOutputStream());
@@ -60,6 +60,7 @@ public class ThreatOfServerToClient implements Runnable{
                             ObjectOutputStream Receiveroos = new ObjectOutputStream(Receiversocket.getOutputStream());
                             Receiveroos.writeObject(message);
                             Receiveroos.flush();
+                            System.out.println(message.getSenderID()+"对"+message.getReceiverID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime()));
                         }
                         break;
                     case MessageType.MESSAGE_LOGOUT:
@@ -73,6 +74,7 @@ public class ThreatOfServerToClient implements Runnable{
                         System.out.println(ServerSocketManager.viewAllSocket());
                         oos.writeObject(message);
                         oos.flush();
+                        System.out.println(message.getSenderID()+"查询了在线用户\n");
                         break;
                 }
 

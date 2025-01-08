@@ -1,4 +1,4 @@
-package com.client.GUI;
+package com.GUI;
 
 
 import com.client.User;
@@ -45,7 +45,8 @@ public class ThreatOfServerToClientGUI implements Runnable{
                     case MessageType.MESSAGE_SEND_GRUPE:
                         content=(String) message.getContent();
 
-                        txtAllMessages.append(user.getId()+":"+content+"\t"+ Utility.TimeFormat(message.getSendtime())+"\n");
+                        txtAllMessages.append(user.getId()+"对所有人:"+content+"\t"+ Utility.TimeFormat(message.getSendtime())+"\n");
+                        System.out.println(user.getId()+"对所有人:"+content+"\t"+ Utility.TimeFormat(message.getSendtime()));
                         Map.Entry[] entries = ServerSocketManager.getAllIfo();
                         for (Map.Entry entry : entries) {
                             ObjectOutputStream Receiveroos = new ObjectOutputStream(((Socket)entry.getValue()).getOutputStream());
@@ -68,12 +69,14 @@ public class ThreatOfServerToClientGUI implements Runnable{
                             Receiveroos.writeObject(message);
                             Receiveroos.flush();
                             txtAllMessages.append(message.getSenderID()+"对"+message.getReceiverID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime())+"\n");
+                            System.out.println(message.getSenderID()+"对"+message.getReceiverID()+":"+message.getContent()+"\t"+ Utility.TimeFormat(message.getSendtime()));
                         }
                         break;
                     case MessageType.MESSAGE_LOGOUT:
                         loop = false;
                         ServerSocketManager.removeSocket(user.getId());
                         txtAllMessages.append(user.getId()+"下线\n");
+                        System.out.println(user.getId()+"下线\n");
                         break;
                     case MessageType.MESSAGE_VIEW_ONLINEUSER:
                         message.setContent(ServerSocketManager.viewAllSocket());
@@ -82,6 +85,7 @@ public class ThreatOfServerToClientGUI implements Runnable{
                         oos.writeObject(message);
                         oos.flush();
                         txtAllMessages.append(message.getSenderID()+"查询了在线用户\n");
+                        System.out.println(message.getSenderID()+"查询了在线用户\n");
                         break;
                 }
 
@@ -93,6 +97,7 @@ public class ThreatOfServerToClientGUI implements Runnable{
                 }
 
                 txtAllMessages.append(user.getId()+"下线\n");
+                System.out.println(user.getId()+"下线\n");
                     break;
                 }
 

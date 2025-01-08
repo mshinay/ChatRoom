@@ -9,7 +9,7 @@ public class Message implements Serializable {
     private String SenderID;
     private String ReceiverID;
     private LocalDateTime Sendtime;
-    private String content; //use generics to expand type of message like text,picture,video,ect
+    private String content;
     private String MessageType;
 
     public Message() {
